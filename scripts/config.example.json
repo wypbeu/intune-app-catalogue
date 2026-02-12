@@ -1,0 +1,21 @@
+{
+  "tenantId": "your-tenant-id",
+  "clientId": "your-app-registration-client-id",
+  "clientSecret": "your-client-secret",
+  "graphBaseUrl": "https://graph.microsoft.com/beta",
+  "sharepoint": {
+    "siteId": "your-sharepoint-site-id",
+    "listName": "Application Catalogue"
+  },
+  "ai": {
+    "provider": "openai",
+    "apiKey": "your-openai-api-key",
+    "model": "gpt-4o",
+    "endpoint": "https://api.openai.com/v1/chat/completions"
+  },
+  "options": {
+    "batchSize": 50,
+    "maxRetries": 3,
+    "logLevel": "Info"
+  }
+}

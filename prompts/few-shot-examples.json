@@ -1,0 +1,42 @@
+[
+  {
+    "input": "## Managed Apps\n```json\n[{\"DisplayName\": \"Google Chrome\", \"Version\": \"121.0\", \"Publisher\": \"Google LLC\", \"PackagingFormat\": \"Win32\"}, {\"DisplayName\": \"Microsoft Teams\", \"Version\": \"24.1\", \"Publisher\": \"Microsoft Corporation\", \"PackagingFormat\": \"MSIX\"}]\n```\n\n## Detected Apps\n```json\n[{\"DisplayName\": \"Google Chrome\", \"Version\": \"121.0.6167.85\", \"Publisher\": \"Google LLC\", \"DeviceCount\": 342}, {\"DisplayName\": \"Notepad++\", \"Version\": \"8.6.2\", \"Publisher\": \"Notepad++ Team\", \"DeviceCount\": 187}, {\"DisplayName\": \"Microsoft Visual C++ 2019 Redistributable\", \"Version\": \"14.29.30133\", \"Publisher\": \"Microsoft Corporation\", \"DeviceCount\": 298}]\n```\n\nClassify each detected app.",
+    "output": {
+      "classifications": [
+        {
+          "displayName": "Google Chrome",
+          "publisher": "Google LLC",
+          "version": "121.0.6167.85",
+          "deviceCount": 342,
+          "classification": "msix_candidate",
+          "packagingFormat": "Win32",
+          "msixReadiness": 4,
+          "reason": "Matches managed Win32 deployment. Chrome has no kernel drivers or COM dependencies, making it a strong MSIX conversion candidate. Google also provides MSIX-compatible installers.",
+          "matchedManagedApp": "Google Chrome"
+        },
+        {
+          "displayName": "Notepad++",
+          "publisher": "Notepad++ Team",
+          "version": "8.6.2",
+          "deviceCount": 187,
+          "classification": "orphaned",
+          "packagingFormat": "Unknown",
+          "msixReadiness": null,
+          "reason": "Installed on 187 devices but not present in the managed app inventory. Likely user-installed or deployed via a legacy method. Should be evaluated for Intune onboarding or removal.",
+          "matchedManagedApp": null
+        },
+        {
+          "displayName": "Microsoft Visual C++ 2019 Redistributable",
+          "publisher": "Microsoft Corporation",
+          "version": "14.29.30133",
+          "deviceCount": 298,
+          "classification": "managed",
+          "packagingFormat": "Win32",
+          "msixReadiness": null,
+          "reason": "Runtime dependency commonly deployed as a prerequisite for other applications. Present across most managed devices as expected.",
+          "matchedManagedApp": null
+        }
+      ]
+    }
+  }
+]

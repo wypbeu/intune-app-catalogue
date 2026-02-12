@@ -1,0 +1,64 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": ["classifications"],
+  "properties": {
+    "classifications": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "displayName",
+          "publisher",
+          "version",
+          "deviceCount",
+          "classification",
+          "packagingFormat",
+          "reason"
+        ],
+        "properties": {
+          "displayName": {
+            "type": "string",
+            "description": "Application name as detected"
+          },
+          "publisher": {
+            "type": ["string", "null"],
+            "description": "Application publisher"
+          },
+          "version": {
+            "type": ["string", "null"],
+            "description": "Detected version"
+          },
+          "deviceCount": {
+            "type": "integer",
+            "description": "Number of devices where app was detected"
+          },
+          "classification": {
+            "type": "string",
+            "enum": ["managed", "orphaned", "unowned", "msix_candidate", "retirement"],
+            "description": "Classification category"
+          },
+          "packagingFormat": {
+            "type": "string",
+            "enum": ["Win32", "MSIX", "Store", "MSI", "WinGet", "UWP", "Unknown"],
+            "description": "Current packaging format"
+          },
+          "msixReadiness": {
+            "type": ["integer", "null"],
+            "minimum": 1,
+            "maximum": 5,
+            "description": "MSIX conversion readiness score (1-5, only for msix_candidate)"
+          },
+          "reason": {
+            "type": "string",
+            "description": "Brief explanation of classification rationale"
+          },
+          "matchedManagedApp": {
+            "type": ["string", "null"],
+            "description": "Name of matched managed app, if any"
+          }
+        }
+      }
+    }
+  }
+}

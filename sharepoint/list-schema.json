@@ -1,0 +1,125 @@
+{
+  "displayName": "Application Catalogue",
+  "description": "Self-maintaining application catalogue — synced from Intune Graph API with AI classification",
+  "columns": [
+    {
+      "name": "Title",
+      "type": "text",
+      "description": "Application display name",
+      "required": true,
+      "indexed": true
+    },
+    {
+      "name": "Publisher",
+      "type": "text",
+      "description": "Application publisher",
+      "indexed": true
+    },
+    {
+      "name": "Version",
+      "type": "text",
+      "description": "Currently detected version"
+    },
+    {
+      "name": "Classification",
+      "type": "choice",
+      "description": "AI-assigned classification",
+      "choices": ["Managed", "Orphaned", "Unowned", "MSIX Candidate", "Retirement"],
+      "indexed": true
+    },
+    {
+      "name": "DeviceCount",
+      "type": "number",
+      "description": "Number of devices where the app is installed"
+    },
+    {
+      "name": "PackagingFormat",
+      "type": "choice",
+      "description": "Current packaging format",
+      "choices": ["Win32", "MSIX", "Store", "MSI", "WinGet", "UWP", "Unknown"]
+    },
+    {
+      "name": "MSIXReadiness",
+      "type": "number",
+      "description": "MSIX conversion readiness score (1-5, for candidates only)",
+      "minimum": 1,
+      "maximum": 5
+    },
+    {
+      "name": "ClassificationReason",
+      "type": "text",
+      "description": "AI-generated explanation of classification",
+      "multiline": true
+    },
+    {
+      "name": "Owner",
+      "type": "person",
+      "description": "Team or individual responsible for this application (manually assigned)"
+    },
+    {
+      "name": "BusinessJustification",
+      "type": "text",
+      "description": "Why this application is needed (manually maintained)",
+      "multiline": true
+    },
+    {
+      "name": "LifecycleStatus",
+      "type": "choice",
+      "description": "Current lifecycle stage",
+      "choices": ["Active", "Under Review", "Deprecated", "Retired"],
+      "default": "Active"
+    },
+    {
+      "name": "LastSyncDate",
+      "type": "dateTime",
+      "description": "When this entry was last updated by the pipeline"
+    },
+    {
+      "name": "MatchedManagedApp",
+      "type": "text",
+      "description": "Name of the matched Intune managed app deployment"
+    },
+    {
+      "name": "Notes",
+      "type": "text",
+      "description": "Manual notes and context",
+      "multiline": true
+    }
+  ],
+  "views": [
+    {
+      "name": "All Applications",
+      "description": "Complete catalogue",
+      "sortBy": "Title",
+      "sortAscending": true
+    },
+    {
+      "name": "Orphaned Apps",
+      "description": "Installed but not managed — requires investigation",
+      "filter": "Classification eq 'Orphaned'",
+      "sortBy": "DeviceCount",
+      "sortAscending": false
+    },
+    {
+      "name": "MSIX Candidates",
+      "description": "Win32 apps suitable for MSIX conversion",
+      "filter": "Classification eq 'MSIX Candidate'",
+      "sortBy": "MSIXReadiness",
+      "sortAscending": false
+    },
+    {
+      "name": "Retirement Queue",
+      "description": "Apps flagged for potential retirement",
+      "filter": "Classification eq 'Retirement'",
+      "sortBy": "DeviceCount",
+      "sortAscending": true
+    },
+    {
+      "name": "Unowned Apps",
+      "description": "Managed apps with no assigned owner",
+      "filter": "Classification eq 'Unowned'",
+      "sortBy": "DeviceCount",
+      "sortAscending": false
+    }
+  ]
+}

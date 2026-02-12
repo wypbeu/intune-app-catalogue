@@ -1,0 +1,133 @@
+{
+  "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "name": "Application Catalogue Sync",
+    "description": "Syncs Intune detected and managed apps, classifies with AI, updates SharePoint catalogue",
+    "version": "1.0.0",
+    "author": "intune-app-catalogue"
+  },
+  "triggers": {
+    "Recurrence": {
+      "type": "Recurrence",
+      "recurrence": {
+        "frequency": "Day",
+        "interval": 1,
+        "startTime": "2026-01-01T06:00:00Z",
+        "timeZone": "UTC"
+      }
+    }
+  },
+  "actions": {
+    "Initialize_Variables": {
+      "type": "InitializeVariable",
+      "inputs": {
+        "variables": [
+          { "name": "TenantId", "type": "string", "value": "YOUR_TENANT_ID" },
+          { "name": "ClientId", "type": "string", "value": "YOUR_CLIENT_ID" },
+          { "name": "ClientSecret", "type": "string", "value": "YOUR_CLIENT_SECRET" },
+          { "name": "AIEndpoint", "type": "string", "value": "https://api.openai.com/v1/chat/completions" },
+          { "name": "AIApiKey", "type": "string", "value": "YOUR_AI_API_KEY" },
+          { "name": "DetectedApps", "type": "array", "value": [] },
+          { "name": "ManagedApps", "type": "array", "value": [] }
+        ]
+      },
+      "runAfter": {}
+    },
+    "Get_Access_Token": {
+      "type": "Http",
+      "inputs": {
+        "method": "POST",
+        "uri": "https://login.microsoftonline.com/@{variables('TenantId')}/oauth2/v2.0/token",
+        "headers": { "Content-Type": "application/x-www-form-urlencoded" },
+        "body": "grant_type=client_credentials&client_id=@{variables('ClientId')}&client_secret=@{variables('ClientSecret')}&scope=https://graph.microsoft.com/.default"
+      },
+      "runAfter": { "Initialize_Variables": ["Succeeded"] },
+      "_comment": "Authenticates to Graph API using client credentials"
+    },
+    "Fetch_Detected_Apps": {
+      "type": "Http",
+      "inputs": {
+        "method": "GET",
+        "uri": "https://graph.microsoft.com/beta/deviceManagement/detectedApps?$top=100",
+        "headers": {
+          "Authorization": "Bearer @{body('Get_Access_Token').access_token}",
+          "Content-Type": "application/json"
+        }
+      },
+      "runAfter": { "Get_Access_Token": ["Succeeded"] },
+      "_comment": "Fetches all detected apps. Add a Do Until loop for pagination in production."
+    },
+    "Fetch_Managed_Apps": {
+      "type": "Http",
+      "inputs": {
+        "method": "GET",
+        "uri": "https://graph.microsoft.com/beta/deviceManagement/mobileApps?$top=100",
+        "headers": {
+          "Authorization": "Bearer @{body('Get_Access_Token').access_token}",
+          "Content-Type": "application/json"
+        }
+      },
+      "runAfter": { "Get_Access_Token": ["Succeeded"] },
+      "_comment": "Fetches all managed apps. Runs in parallel with Fetch_Detected_Apps."
+    },
+    "Classify_With_AI": {
+      "type": "Http",
+      "inputs": {
+        "method": "POST",
+        "uri": "@{variables('AIEndpoint')}",
+        "headers": {
+          "Authorization": "Bearer @{variables('AIApiKey')}",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "model": "gpt-4o",
+          "temperature": 0.1,
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are an application inventory classifier for a Microsoft Intune-managed Windows estate. Classify each detected application as: managed, orphaned, unowned, msix_candidate, or retirement. Return JSON with a 'classifications' array."
+            },
+            {
+              "role": "user",
+              "content": "Managed apps: @{string(body('Fetch_Managed_Apps').value)}\n\nDetected apps: @{string(body('Fetch_Detected_Apps').value)}\n\nClassify each detected app."
+            }
+          ],
+          "response_format": { "type": "json_object" }
+        }
+      },
+      "runAfter": {
+        "Fetch_Detected_Apps": ["Succeeded"],
+        "Fetch_Managed_Apps": ["Succeeded"]
+      },
+      "_comment": "Sends both datasets to AI for classification. In production, batch large estates to avoid token limits."
+    },
+    "Update_SharePoint_Catalogue": {
+      "type": "Foreach",
+      "foreach": "@body('Classify_With_AI').choices[0].message.content.classifications",
+      "actions": {
+        "Create_Or_Update_Item": {
+          "type": "ApiConnection",
+          "inputs": {
+            "host": { "connection": { "name": "@parameters('$connections')['sharepointonline']['connectionId']" } },
+            "method": "post",
+            "path": "/datasets/@{encodeURIComponent('YOUR_SHAREPOINT_SITE_URL')}/tables/@{encodeURIComponent('Application Catalogue')}/items",
+            "body": {
+              "Title": "@{items('Update_SharePoint_Catalogue').displayName}",
+              "Publisher": "@{items('Update_SharePoint_Catalogue').publisher}",
+              "Version": "@{items('Update_SharePoint_Catalogue').version}",
+              "Classification": "@{items('Update_SharePoint_Catalogue').classification}",
+              "DeviceCount": "@{items('Update_SharePoint_Catalogue').deviceCount}",
+              "PackagingFormat": "@{items('Update_SharePoint_Catalogue').packagingFormat}",
+              "ClassificationReason": "@{items('Update_SharePoint_Catalogue').reason}",
+              "LastSyncDate": "@{utcNow()}"
+            }
+          },
+          "_comment": "Creates items. In production, add logic to check for existing items and update instead."
+        }
+      },
+      "runAfter": { "Classify_With_AI": ["Succeeded"] }
+    }
+  },
+  "_comment": "This is a simplified flow definition for reference. The production version should include: pagination loops for Graph API calls, batching for the AI classification step, delta sync logic for SharePoint updates, error handling and retry policies, and a notification action."
+}
