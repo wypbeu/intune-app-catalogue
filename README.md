@@ -50,7 +50,7 @@ Both paths use the same AI classification prompts (`prompts/`) and write to the 
 - Microsoft 365 tenant with Intune
 - Azure AD app registration with `DeviceManagementApps.Read.All` and `DeviceManagementManagedDevices.Read.All` permissions
 - SharePoint site for the catalogue
-- OpenAI API key or Azure OpenAI deployment (for AI classification)
+- AI provider with structured JSON output support (OpenAI, Azure OpenAI, Gemini, Ollama, or any OpenAI-compatible endpoint)
 
 ### PowerShell Path
 

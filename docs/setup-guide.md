@@ -53,12 +53,14 @@ See `graph-permissions.md` for detailed permission explanations.
 
 ## 3. AI Service
 
+Any model that supports structured JSON output via a chat completions API will work. The pipeline uses the OpenAI-compatible request format, which most providers support natively or via compatible endpoints.
+
 ### Option A: OpenAI
 
 1. Create an account at [platform.openai.com](https://platform.openai.com)
 2. Generate an API key
 3. Use endpoint: `https://api.openai.com/v1/chat/completions`
-4. Recommended model: `gpt-4o` (best balance of cost and quality for classification)
+4. Recommended model: `gpt-4o` (good balance of cost and quality for classification)
 
 ### Option B: Azure OpenAI
 
@@ -66,6 +68,24 @@ See `graph-permissions.md` for detailed permission explanations.
 2. Deploy a `gpt-4o` model
 3. Use endpoint: `https://{resource-name}.openai.azure.com/openai/deployments/{deployment-name}/chat/completions?api-version=2024-02-01`
 4. Use the Azure OpenAI API key
+
+### Option C: Google Gemini
+
+1. Get an API key from [Google AI Studio](https://aistudio.google.com/)
+2. Use endpoint: `https://generativelanguage.googleapis.com/v1beta/openai/chat/completions`
+3. Recommended model: `gemini-2.0-flash`
+4. Gemini's OpenAI-compatible endpoint accepts the same request format — no script changes needed
+
+### Option D: Local model (Ollama)
+
+1. Install [Ollama](https://ollama.com) and pull a model (e.g., `ollama pull llama3`)
+2. Use endpoint: `http://localhost:11434/v1/chat/completions`
+3. No API key required — leave the field empty or set to `ollama`
+4. Best for testing or air-gapped environments; classification quality depends on model size
+
+### Option E: Anthropic Claude
+
+Claude uses a different API format, so the HTTP call in `Invoke-AppClassification.ps1` needs adjusting (request body structure and auth header differ). The prompts and output schema are the same — only the transport layer changes. See [Anthropic's API docs](https://docs.anthropic.com/en/api/messages) for the message format.
 
 ## 4. Configuration
 

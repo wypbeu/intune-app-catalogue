@@ -7,7 +7,7 @@ This directory contains a Power Automate flow that implements the application ca
 - Power Automate Premium licence (required for HTTP connector to Graph API)
 - Azure AD app registration with Graph API permissions (see `docs/graph-permissions.md`)
 - SharePoint site with the catalogue list created (see `sharepoint/list-schema.json`)
-- OpenAI API key or Azure OpenAI deployment
+- AI provider API key (OpenAI, Azure OpenAI, Gemini, or any OpenAI-compatible endpoint)
 
 ## Importing the Flow
 

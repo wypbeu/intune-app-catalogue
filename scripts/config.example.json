@@ -9,9 +9,16 @@
   },
   "ai": {
     "provider": "openai",
-    "apiKey": "your-openai-api-key",
+    "apiKey": "your-api-key",
     "model": "gpt-4o",
-    "endpoint": "https://api.openai.com/v1/chat/completions"
+    "endpoint": "https://api.openai.com/v1/chat/completions",
+    "_comment": "Any provider with an OpenAI-compatible chat completions API works. Examples:",
+    "_endpoints": {
+      "openai": "https://api.openai.com/v1/chat/completions",
+      "azure-openai": "https://{resource}.openai.azure.com/openai/deployments/{deployment}/chat/completions?api-version=2024-02-01",
+      "ollama": "http://localhost:11434/v1/chat/completions",
+      "gemini": "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions"
+    }
   },
   "options": {
     "batchSize": 50,
