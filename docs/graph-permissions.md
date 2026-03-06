@@ -1,6 +1,6 @@
 # Graph API Permissions
 
-The application catalogue pipeline requires an Azure AD app registration with the following Microsoft Graph application permissions.
+The application catalogue pipeline requires a Microsoft Entra ID app registration with the following Microsoft Graph application permissions.
 
 ## Required Permissions
 
@@ -10,7 +10,7 @@ The application catalogue pipeline requires an Azure AD app registration with th
 | `DeviceManagementManagedDevices.Read.All` | Application | Read device details for enriching app-to-device relationships |
 | `Sites.ReadWrite.All` | Application | Create and update items in the SharePoint catalogue list |
 
-All permissions require **admin consent** — a Global Administrator or Application Administrator must grant consent after adding the permissions.
+All permissions require **admin consent**. A Global Administrator or Application Administrator must grant consent after adding the permissions.
 
 ## Why Application Permissions (Not Delegated)?
 
@@ -18,9 +18,9 @@ The pipeline runs unattended on a schedule. Application permissions allow the pi
 
 ## Least Privilege Considerations
 
-- `Sites.ReadWrite.All` is broader than ideal — it grants write access to all SharePoint sites, not just the catalogue site. Microsoft does not currently offer site-scoped application permissions through the standard consent flow. If your organisation uses [Sites.Selected](https://learn.microsoft.com/en-us/graph/permissions-reference#sitesselected), you can scope the permission to the specific catalogue site.
+- `Sites.ReadWrite.All` is broader than ideal; it grants write access to all SharePoint sites, not just the catalogue site. Microsoft does not currently offer site-scoped application permissions through the standard consent flow. If your organisation uses [Sites.Selected](https://learn.microsoft.com/en-us/graph/permissions-reference#sitesselected), you can scope the permission to the specific catalogue site.
 
-- `DeviceManagementApps.Read.All` is read-only — the pipeline never writes to Intune, only reads inventory data.
+- `DeviceManagementApps.Read.All` is read-only. The pipeline never writes to Intune, only reads inventory data.
 
 ## Graph API Endpoints Used
 

@@ -5,7 +5,7 @@ This directory contains a Power Automate flow that implements the application ca
 ## Prerequisites
 
 - Power Automate Premium licence (required for HTTP connector to Graph API)
-- Azure AD app registration with Graph API permissions (see `docs/graph-permissions.md`)
+- Microsoft Entra ID app registration with Graph API permissions (see `docs/graph-permissions.md`)
 - SharePoint site with the catalogue list created (see `sharepoint/list-schema.json`)
 - AI provider API key (OpenAI, Azure OpenAI, Gemini, or any OpenAI-compatible endpoint)
 
@@ -23,14 +23,14 @@ This directory contains a Power Automate flow that implements the application ca
 
 The flow runs on a daily schedule (configurable) and executes these steps:
 
-1. **Scheduled Trigger** — runs at 06:00 UTC daily
-2. **Authenticate to Graph API** — using client credentials from app registration
-3. **Fetch Managed Apps** — GET `/deviceManagement/mobileApps` with pagination
-4. **Fetch Detected Apps** — GET `/deviceManagement/detectedApps` with pagination
-5. **Normalize Data** — deduplicate, standardise names, merge datasets
-6. **AI Classification** — POST to OpenAI/Azure OpenAI with the system prompt and app data
-7. **Update SharePoint List** — delta sync: create new entries, update existing, flag removals
-8. **Send Digest** (optional) — Teams message summarising new orphans, candidates, and changes
+1. **Scheduled Trigger**: runs at 06:00 UTC daily
+2. **Authenticate to Graph API**: using client credentials from app registration
+3. **Fetch Managed Apps**: GET `/deviceManagement/mobileApps` with pagination
+4. **Fetch Detected Apps**: GET `/deviceManagement/detectedApps` with pagination
+5. **Normalize Data**: deduplicate, standardise names, merge datasets
+6. **AI Classification**: POST to OpenAI/Azure OpenAI with the system prompt and app data
+7. **Update SharePoint List**: delta sync: create new entries, update existing, flag removals
+8. **Send Digest** (optional): Teams message summarising new orphans, candidates, and changes
 
 ## Configuration
 
@@ -38,7 +38,7 @@ After importing, update these flow variables:
 
 | Variable | Description |
 |----------|-------------|
-| `TenantId` | Your Azure AD tenant ID |
+| `TenantId` | Your Entra ID tenant ID |
 | `ClientId` | App registration client ID |
 | `ClientSecret` | App registration client secret (store in a Key Vault for production) |
 | `SharePointSiteUrl` | URL of the SharePoint site hosting the catalogue |

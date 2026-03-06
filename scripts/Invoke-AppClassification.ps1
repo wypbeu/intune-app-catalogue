@@ -61,12 +61,12 @@ function Invoke-AppClassification {
 
         # Build the user message with the batch data
         $userMessage = @"
-## Managed Apps (reference — what we intentionally deploy)
+## Managed Apps (reference: what we intentionally deploy)
 ``````json
 $($ManagedApps | Select-Object DisplayName, Version, Publisher, PackagingFormat | ConvertTo-Json -Depth 3)
 ``````
 
-## Detected Apps (this batch — classify each one)
+## Detected Apps (this batch: classify each one)
 ``````json
 $($batch | Select-Object DisplayName, Version, Publisher, DeviceCount | ConvertTo-Json -Depth 3)
 ``````

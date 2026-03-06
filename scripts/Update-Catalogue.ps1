@@ -4,7 +4,7 @@
 
 .DESCRIPTION
     Takes the AI classification results and writes them to a SharePoint list,
-    performing delta updates — matching on DisplayName + Publisher composite key,
+    performing delta updates, matching on DisplayName + Publisher composite key,
     updating existing rows, adding new entries, and flagging removed apps.
 
 .PARAMETER Classifications

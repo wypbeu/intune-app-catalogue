@@ -1,8 +1,8 @@
-# Intune Application Catalogue — Self-Maintaining Pipeline
+# Intune Application Catalogue: Self-Maintaining Pipeline
 
-A self-maintaining application catalogue for Intune-managed estates. Pulls inventory from Microsoft Graph API, classifies applications with AI, and surfaces actionable outputs — orphaned software, unowned applications, MSIX migration candidates, and retirement flags.
+A self-maintaining application catalogue for Intune-managed estates. Pulls inventory from Microsoft Graph API, classifies applications with AI, and surfaces actionable outputs: orphaned software, unowned applications, MSIX migration candidates, and retirement flags.
 
-**Companion blog post**: [Building a Self-Maintaining Application Catalogue with Graph API and AI](https://sbd.org.uk/blog/ai-app-catalogue)
+**Companion blog post**: [Self-Maintaining Intune App Catalogue with AI](https://sbd.org.uk/blog/ai-app-catalogue)
 
 ## Architecture
 
@@ -37,9 +37,9 @@ A self-maintaining application catalogue for Intune-managed estates. Pulls inven
 
 This repo provides both approaches:
 
-- **Power Automate** (`power-automate/`) — for teams who prefer low-code, visual workflows within the Power Platform ecosystem. Import the flow template and configure your connections.
+- **Power Automate** (`power-automate/`): for teams who prefer low-code, visual workflows within the Power Platform ecosystem. Import the flow template and configure your connections.
 
-- **PowerShell** (`scripts/`) — for teams who prefer code, want CI/CD integration, or need more control over the pipeline. Run the scripts on a schedule via Task Scheduler, Azure Automation, or a pipeline.
+- **PowerShell** (`scripts/`): for teams who prefer code, want CI/CD integration, or need more control over the pipeline. Run the scripts on a schedule via Task Scheduler, Azure Automation, or a pipeline.
 
 Both paths use the same AI classification prompts (`prompts/`) and write to the same SharePoint catalogue schema (`sharepoint/`).
 
@@ -48,7 +48,7 @@ Both paths use the same AI classification prompts (`prompts/`) and write to the 
 ### Prerequisites
 
 - Microsoft 365 tenant with Intune
-- Azure AD app registration with `DeviceManagementApps.Read.All` and `DeviceManagementManagedDevices.Read.All` permissions
+- Microsoft Entra ID app registration with `DeviceManagementApps.Read.All` and `DeviceManagementManagedDevices.Read.All` permissions
 - SharePoint site for the catalogue
 - AI provider with structured JSON output support (OpenAI, Azure OpenAI, Gemini, Ollama, or any OpenAI-compatible endpoint)
 

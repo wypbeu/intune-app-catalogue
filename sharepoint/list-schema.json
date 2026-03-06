@@ -1,6 +1,6 @@
 {
   "displayName": "Application Catalogue",
-  "description": "Self-maintaining application catalogue — synced from Intune Graph API with AI classification",
+  "description": "Self-maintaining application catalogue, synced from Intune Graph API with AI classification",
   "columns": [
     {
       "name": "Title",
@@ -95,7 +95,7 @@
     },
     {
       "name": "Orphaned Apps",
-      "description": "Installed but not managed — requires investigation",
+      "description": "Installed but not managed; requires investigation",
       "filter": "Classification eq 'Orphaned'",
       "sortBy": "DeviceCount",
       "sortAscending": false
